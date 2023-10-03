@@ -66,4 +66,18 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Http库OkHttp <https://github.com/square/okhttp>
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    // Log库Logger <https://github.com/orhanobut/logger>
+    implementation("com.orhanobut:logger:2.2.0")
+    // https://github.com/zhihaofans/AndroidLibrary
+    debugImplementation(files("libs/android_library-debug.aar"))
+    releaseImplementation("io.zhihao:AndroidLibrary:0.0.11-jitpackfix-2")
+    implementation("com.google.code.gson:gson:2.10.1")
+    // 图片加载库Coil <https://github.com/coil-kt/coil>
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    // 二维码库Zxing <https://github.com/zxing/zxing>
+    // 使用参考 <https://github.com/Tamsiree/RxTool/blob/master/RxFeature/src/main/java/com/tamsiree/rxfeature/tool/RxQRCode.kt>
+    implementation("com.google.zxing:core:3.5.2")
 }
