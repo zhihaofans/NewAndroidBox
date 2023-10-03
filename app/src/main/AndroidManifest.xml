@@ -14,6 +14,11 @@
         android:theme="@style/Theme.NewAndroidBox"
         tools:targetApi="31">
         <activity
+            android:name=".view.QrcodeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_qrcode"
+            android:theme="@style/Theme.NewAndroidBox" />
+        <activity
             android:name=".view.MainActivity"
             android:exported="true"
             android:label="@string/app_name"

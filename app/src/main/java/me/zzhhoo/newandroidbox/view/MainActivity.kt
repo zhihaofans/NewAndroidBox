@@ -3,6 +3,7 @@ package me.zzhhoo.newandroidbox.view
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -93,8 +94,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun initContentView() {
-
-
         getButton(id = "button_androidsdk", title = "Android SDK") {
 //                val navigate = Intent(this@MainActivity, LoginActivity::class.java)
 //                startActivity(navigate)
@@ -141,10 +140,11 @@ class MainActivity : ComponentActivity() {
             }
         }
         getButton(id = "button_app", title = "应用管理") {
-
+            showToast("待更新")
         }
         getButton(id = "button_qrcode", title = "二维码") {
-
+            val navigate = Intent(this@MainActivity, QrcodeActivity::class.java)
+            startActivity(navigate)
         }
     }
 
