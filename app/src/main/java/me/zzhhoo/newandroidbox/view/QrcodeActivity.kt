@@ -37,10 +37,12 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.zhihao.library.android.kotlinEx.isNotNullAndEmpty
+import io.zhihao.library.android.util.ShareUtil
 import me.zzhhoo.newandroidbox.util.QrcodeUtil
 import me.zzhhoo.newandroidbox.view.ui.theme.NewAndroidBoxTheme
 
 class QrcodeActivity : ComponentActivity() {
+    private val shareUtil = ShareUtil(this@QrcodeActivity)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -104,8 +106,10 @@ class QrcodeActivity : ComponentActivity() {
                 )
                 getButton(id = "button_sharetext", title = "分享文本") {
                     if (text.value.isNotNullAndEmpty()) {
-                        shareText(text.value)
+//                        shareText(text.value)
+                        shareUtil.shareText(text.value)
                     }
+
                 }
 
             }
@@ -119,15 +123,5 @@ class QrcodeActivity : ComponentActivity() {
         ) {
             Text(title)
         }
-    }
-
-    private fun shareText(text: String) {
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
-        }
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
     }
 }
