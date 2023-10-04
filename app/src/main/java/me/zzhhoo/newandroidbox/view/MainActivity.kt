@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -33,10 +35,13 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.zhihao.library.android.util.AlertUtil
+import io.zhihao.library.android.util.ClipboardUtil
+import io.zhihao.library.android.util.ShareUtil
 import me.zzhhoo.newandroidbox.view.ui.theme.NewAndroidBoxTheme
 
 class MainActivity : ComponentActivity() {
     private val alertUtil = AlertUtil(this@MainActivity)
+    private val shareUtil = ShareUtil(this@MainActivity)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -136,7 +141,13 @@ class MainActivity : ComponentActivity() {
             val nowSdk = Build.VERSION.SDK_INT
             val alertTitle = "你是" + if (nowSdk <= sdks.size) sdks[nowSdk - 1] else "UNKNOWN"
             alertUtil.showListAlert(alertTitle, sdks) { _, index ->
-                showToast(sdks[index])
+                val title = sdks[index]
+                alertUtil.showListAlert(title, arrayOf("复制", "分享")) { _, idx ->
+                    when (idx) {
+                        0 -> ClipboardUtil.copy(title)
+                        1 -> shareUtil.shareText(title)
+                    }
+                }
             }
         }
         getButton(id = "button_app", title = "应用管理") {
@@ -161,4 +172,14 @@ class MainActivity : ComponentActivity() {
             Text(title)
         }
     }
+
+    @Composable
+    private fun getListView(list: List<String>) {
+        LazyColumn {
+            items(list) { item ->
+                Text(text = item)
+            }
+        }
+    }
+
 }
