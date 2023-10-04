@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">NewAndroidBox</string>
-    <string name="title_activity_qrcode">QrcodeActivity</string>
+    <string name="title_activity_qrcode">Qrcode</string>
+    <string name="title_activity_app">App</string>
 </resources>

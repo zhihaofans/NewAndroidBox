@@ -151,7 +151,8 @@ class MainActivity : ComponentActivity() {
             }
         }
         getButton(id = "button_app", title = "应用管理") {
-            showToast("待更新")
+            val navigate = Intent(this@MainActivity, AppActivity::class.java)
+            startActivity(navigate)
         }
         getButton(id = "button_qrcode", title = "二维码") {
             val navigate = Intent(this@MainActivity, QrcodeActivity::class.java)
