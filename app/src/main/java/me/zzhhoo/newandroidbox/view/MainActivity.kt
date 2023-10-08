@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -31,12 +32,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.zhihao.library.android.util.AlertUtil
 import io.zhihao.library.android.util.ClipboardUtil
 import io.zhihao.library.android.util.ShareUtil
+import me.zzhhoo.newandroidbox.R
 import me.zzhhoo.newandroidbox.view.ui.theme.NewAndroidBoxTheme
 
 class MainActivity : ComponentActivity() {
@@ -75,10 +78,8 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     floatingActionButton = {
-                        FloatingActionButton(onClick = {
-                            /* TODO:fab按钮 */
-                        }) {
-                            Icons.Default.Search
+                        getFab() {
+                            showToast("fab.onClick")
                         }
                     }) {
 
@@ -150,12 +151,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        getButton(id = "button_app", title = "应用管理") {
+        getButton(id = "button_app", title = getString(R.string.title_activity_app)) {
             val navigate = Intent(this@MainActivity, AppActivity::class.java)
             startActivity(navigate)
         }
-        getButton(id = "button_qrcode", title = "二维码") {
+        getButton(id = "button_qrcode", title = getString(R.string.title_activity_qrcode)) {
             val navigate = Intent(this@MainActivity, QrcodeActivity::class.java)
+            startActivity(navigate)
+        }
+        getButton(id = "button_favorites", title = getString(R.string.title_activity_favorites)) {
+            val navigate = Intent(this@MainActivity, FavoritesActivity::class.java)
             startActivity(navigate)
         }
     }
@@ -164,6 +169,14 @@ class MainActivity : ComponentActivity() {
         Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
     }
 
+    @Composable
+    private fun getFab(icon: ImageVector? = Icons.Filled.Add, onClick: () -> Unit) {
+        FloatingActionButton(
+            onClick = { onClick.invoke() },
+        ) {
+            Icon(icon ?: Icons.Filled.Add, "Floating action button.")
+        }
+    }
 
     @Composable
     private fun getButton(id: String, title: String, onClick: () -> Unit) {

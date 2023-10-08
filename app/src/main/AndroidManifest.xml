@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <permission android:name="QUERY_ALL_PACKAGES" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -13,7 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NewAndroidBox"
-        tools:targetApi="31">
+        tools:targetApi="33">
+        <activity
+            android:name=".view.FavoritesActivity"
+            android:exported="false"
+            android:label="@string/title_activity_favorites"
+            android:theme="@style/Theme.NewAndroidBox" />
         <activity
             android:name=".view.AppActivity"
             android:exported="false"
@@ -21,6 +28,7 @@
             android:theme="@style/Theme.NewAndroidBox" />
         <activity
             android:name=".view.QrcodeActivity"
+            android:screenOrientation="fullSensor"
             android:exported="false"
             android:label="@string/title_activity_qrcode"
             android:theme="@style/Theme.NewAndroidBox" />
