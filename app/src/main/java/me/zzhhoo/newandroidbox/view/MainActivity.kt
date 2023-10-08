@@ -1,8 +1,6 @@
 package me.zzhhoo.newandroidbox.view
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -163,6 +160,7 @@ class MainActivity : ComponentActivity() {
             val navigate = Intent(this@MainActivity, FavoritesActivity::class.java)
             startActivity(navigate)
         }
+
     }
 
     private fun showToast(text: String) {

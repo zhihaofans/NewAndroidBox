@@ -1,6 +1,7 @@
 package me.zzhhoo.newandroidbox.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -61,13 +62,21 @@ class QrcodeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            setContent {
-                initView()
+        // TODO:分享到本应用生成二维码
+        when {
+            intent?.action == Intent.ACTION_SEND && "text/plain" == intent.type -> {
+                intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+                    setContent {
+                        initView(it ?: "")
+                        showToast("分享了内容")
+                    }
+                }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Logger.e(e, e.message.toString())
+            else -> {
+                setContent {
+                    initView()
+                }
+            }
         }
     }
 

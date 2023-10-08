@@ -7,9 +7,9 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:hardwareAccelerated="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -28,10 +28,26 @@
             android:theme="@style/Theme.NewAndroidBox" />
         <activity
             android:name=".view.QrcodeActivity"
-            android:screenOrientation="fullSensor"
             android:exported="false"
             android:label="@string/title_activity_qrcode"
-            android:theme="@style/Theme.NewAndroidBox" />
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.NewAndroidBox">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".view.MainActivity"
             android:exported="true"
