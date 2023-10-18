@@ -17,6 +17,21 @@
         android:theme="@style/Theme.NewAndroidBox"
         tools:targetApi="33">
         <activity
+            android:name=".view.CalculatetoolActivity"
+            android:exported="false"
+            android:label="@string/title_activity_calculatetool"
+            android:theme="@style/Theme.NewAndroidBox" />
+        <activity
+            android:name=".view.TodoActivity"
+            android:exported="false"
+            android:label="@string/title_activity_todo"
+            android:theme="@style/Theme.NewAndroidBox" />
+        <activity
+            android:name=".view.DownloaderActivity"
+            android:exported="false"
+            android:label="@string/title_activity_downloader"
+            android:theme="@style/Theme.NewAndroidBox" />
+        <activity
             android:name=".view.FavoritesActivity"
             android:exported="false"
             android:label="@string/title_activity_favorites"
@@ -34,17 +49,23 @@
             android:theme="@style/Theme.NewAndroidBox">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>

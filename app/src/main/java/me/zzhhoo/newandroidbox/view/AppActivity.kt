@@ -3,6 +3,7 @@ package me.zzhhoo.newandroidbox.view
 import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -11,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -31,22 +33,47 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import com.orhanobut.logger.Logger
+import io.zhihao.library.android.kotlinEx.getAppIcon
 import io.zhihao.library.android.kotlinEx.getAppName
-import io.zhihao.library.android.util.AppUtil
+import io.zhihao.library.android.util.AlertUtil
+import io.zhihao.library.android.util.FileUtil
+import io.zhihao.library.android.util.ShareUtil
+import io.zhihao.library.android.util.ToastUtil
 import me.zzhhoo.newandroidbox.R
+import me.zzhhoo.newandroidbox.util.ImageUtil
+import me.zzhhoo.newandroidbox.util.ViewUtil
 import me.zzhhoo.newandroidbox.view.ui.theme.NewAndroidBoxTheme
 
 
 class AppActivity : ComponentActivity() {
+    private val alertUtil = AlertUtil(this)
+    private val shareUtil = ShareUtil(this)
+    private val toastUtil = ToastUtil(this)
+    private val viewUtil = ViewUtil(this)
     private var appList = mutableListOf<Map<String, Any>>()
+    private val onlyUserApp = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            init()
+            NewAndroidBoxTheme {
+                MaterialTheme {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Loading",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
         }
+        init()
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -90,34 +117,22 @@ class AppActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        getListView(list = packs.map { it.loadLabel(packageManager).toString() })
+                        viewUtil.getListView(packs.sortedBy { it.getAppName() }.map {
+                            it.getAppName()
+                        }) { idx, name ->
+                            val app = packs.get(idx)
+                            toastUtil.showShortToast(app.loadLabel(packageManager).toString())
+                            app.loadIcon(packageManager)
+                            alertUtil.showListAlert(
+                                app.getAppName(),
+                                arrayOf("保存图标")
+                            ) { dialog, index ->
+                                when (index) {
+                                    0 -> getAppIcon(app)
+                                }
+                            }
+                        }
                     }
-                }
-            }
-        }
-    }
-
-    private fun showToast(text: String) {
-        Toast.makeText(this@AppActivity, text, Toast.LENGTH_SHORT).show()
-    }
-
-
-    @Composable
-    private fun getButton(id: String, title: String?, onClick: () -> Unit) {
-        Button(modifier = Modifier.layoutId(id),
-            onClick = { onClick.invoke() }
-        ) {
-            Logger.d(title)
-            Text(title ?: "未知")
-        }
-    }
-
-    @Composable
-    private fun getListView(list: List<String>) {
-        LazyColumn {
-            items(list) { item ->
-                getButton(id = "button_app_${item}", title = item) {
-
                 }
             }
         }
@@ -153,12 +168,14 @@ class AppActivity : ComponentActivity() {
                 map["packageName"] = pi.packageName
                 map["packageInfo"] = pi
                 //包名
-                if (pi.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
-                    appList.add(map)//如果非系统应用，则添加至appList
-                }/* else if (!onlyUserApp) {
-                    appList.add(map)//如果系统应用，当 onlyUserApp==false 时添加至appList
 
-                }*/
+                if (pi.flags and (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP or ApplicationInfo.FLAG_SYSTEM) > 0) {
+                    if (!onlyUserApp) {
+                        appList.add(map)//如果系统应用，当 onlyUserApp==false 时添加至appList
+                    }
+                } else {
+                    appList.add(map)//如果非系统应用，则添加至appList
+                }
                 pi
                 //循环读取存到HashMap,再增加到ArrayList.一个HashMap就是一项
             }
@@ -166,5 +183,28 @@ class AppActivity : ComponentActivity() {
                 initView(packs)
             }
         }.start()
+    }
+
+    private fun getAppIcon(appInfo: ApplicationInfo) {
+        val appName = appInfo.getAppName()
+        val appPackageName = appInfo.packageName
+        val appIcon = appInfo.getAppIcon()?.toBitmap()
+        val saveTo = FileUtil.getDownloadPathString() + "NewAndroidBox/"
+        val savePath = "$saveTo$appPackageName-icon.png"
+        val success = if (ImageUtil.isEmpty(appIcon)) {
+            false
+        } else {
+            FileUtil.saveImagePng(appIcon!!, savePath)
+        }
+
+        val title = "保存：" + if (success) {
+            "成功"
+        } else {
+            "失败"
+        }
+
+        alertUtil.showInputAlert(title, savePath) { text, dialog ->
+
+        }
     }
 }

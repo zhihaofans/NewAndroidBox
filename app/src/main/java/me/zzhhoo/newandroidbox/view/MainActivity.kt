@@ -40,8 +40,8 @@ import me.zzhhoo.newandroidbox.R
 import me.zzhhoo.newandroidbox.view.ui.theme.NewAndroidBoxTheme
 
 class MainActivity : ComponentActivity() {
-    private val alertUtil = AlertUtil(this@MainActivity)
-    private val shareUtil = ShareUtil(this@MainActivity)
+    private val alertUtil = AlertUtil(this)
+    private val shareUtil = ShareUtil(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(bottom = 0.dp) // 这里为 TopAppBar 添加上边距
                                 .fillMaxWidth(),
                             title = {
-                                Text(text = "Android Box")
+                                Text(text = getString(R.string.app_name))
                             },
                             actions = {
                                 Icon(
@@ -98,7 +98,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun initContentView() {
         getButton(id = "button_androidsdk", title = "Android SDK") {
-//                val navigate = Intent(this@MainActivity, LoginActivity::class.java)
+//                val navigate = Intent(this, LoginActivity::class.java)
 //                startActivity(navigate)
             val sdks = arrayOf(
                 "Android 1.0 (API 1)",
@@ -149,22 +149,29 @@ class MainActivity : ComponentActivity() {
             }
         }
         getButton(id = "button_app", title = getString(R.string.title_activity_app)) {
-            val navigate = Intent(this@MainActivity, AppActivity::class.java)
+            val navigate = Intent(this, AppActivity::class.java)
             startActivity(navigate)
         }
         getButton(id = "button_qrcode", title = getString(R.string.title_activity_qrcode)) {
-            val navigate = Intent(this@MainActivity, QrcodeActivity::class.java)
+            val navigate = Intent(this, QrcodeActivity::class.java)
             startActivity(navigate)
         }
         getButton(id = "button_favorites", title = getString(R.string.title_activity_favorites)) {
-            val navigate = Intent(this@MainActivity, FavoritesActivity::class.java)
+            val navigate = Intent(this, FavoritesActivity::class.java)
+            startActivity(navigate)
+        }
+        getButton(
+            id = "button_calculatetool",
+            title = getString(R.string.title_activity_calculatetool)
+        ) {
+            val navigate = Intent(this, CalculatetoolActivity::class.java)
             startActivity(navigate)
         }
 
     }
 
     private fun showToast(text: String) {
-        Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     @Composable
