@@ -2,13 +2,13 @@ package me.zzhhoo.newandroidbox.util
 
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
-import android.os.FileUtils
 import com.orhanobut.logger.Logger
 import java.io.BufferedOutputStream
 import java.io.Closeable
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import io.zhihao.library.android.util.FileUtil
 
 
 class ImageUtil {
@@ -27,7 +27,7 @@ class ImageUtil {
          */
         fun saveImage(
             bitmap: Bitmap?,
-            filePath: String?,
+            filePath: String,
             format: CompressFormat?,
             quality: Int = 100
         ): Boolean {
@@ -52,12 +52,12 @@ class ImageUtil {
             // 防止 Bitmap 为 null, 或者创建文件夹失败 ( 文件存在则删除 )
             if (isEmpty(bitmap) || !FileUtil.createFileByDeleteOldFile(file)) return false
             var os: OutputStream? = null
-            try {
+            return try {
                 os = BufferedOutputStream(FileOutputStream(file))
-                return bitmap.compress(format, quality, os)
+                bitmap.compress(format, quality, os)
             } catch (e: Exception) {
                 Logger.e("ImageUtil", e, "saveBitmapToSDCard")
-                return false
+                false
             } finally {
                 closeIOQuietly(os)
             }

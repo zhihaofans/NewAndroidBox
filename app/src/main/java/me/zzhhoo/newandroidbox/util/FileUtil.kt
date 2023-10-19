@@ -7,23 +7,6 @@ import java.io.IOException
 
 class FileUtil {
     companion object {
-        /**
-         * 判断文件是否存在, 存在则在创建之前删除
-         * @param file 文件
-         * @return `true` 创建成功, `false` 创建失败
-         */
-        fun createFileByDeleteOldFile(file: File?): Boolean {
-            if (file == null) return false
-            // 文件存在并且删除失败返回 false
-            if (file.exists() && !file.delete()) return false
-            // 创建目录失败返回 false
-            return if (!createOrExistsDir(file.parentFile)) false else try {
-                file.createNewFile()
-            } catch (e: IOException) {
-                Logger.e("FileUtil", e, "createFileByDeleteOldFile")
-                false
-            }
-        }
 
         /**
          * 判断目录是否存在, 不存在则判断是否创建成功

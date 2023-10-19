@@ -38,6 +38,7 @@ import androidx.core.graphics.drawable.toBitmap
 import com.orhanobut.logger.Logger
 import io.zhihao.library.android.kotlinEx.getAppIcon
 import io.zhihao.library.android.kotlinEx.getAppName
+import io.zhihao.library.android.kotlinEx.isEmpty
 import io.zhihao.library.android.util.AlertUtil
 import io.zhihao.library.android.util.FileUtil
 import io.zhihao.library.android.util.ShareUtil
@@ -191,7 +192,7 @@ class AppActivity : ComponentActivity() {
         val appIcon = appInfo.getAppIcon()?.toBitmap()
         val saveTo = FileUtil.getDownloadPathString() + "NewAndroidBox/"
         val savePath = "$saveTo$appPackageName-icon.png"
-        val success = if (ImageUtil.isEmpty(appIcon)) {
+        val success = if (appIcon.isEmpty()) {
             false
         } else {
             FileUtil.saveImagePng(appIcon!!, savePath)
