@@ -36,12 +36,16 @@ import androidx.compose.ui.unit.dp
 import io.zhihao.library.android.util.AlertUtil
 import io.zhihao.library.android.util.ClipboardUtil
 import io.zhihao.library.android.util.ShareUtil
+import io.zhihao.library.android.util.ToastUtil
 import me.zzhhoo.newandroidbox.R
+import me.zzhhoo.newandroidbox.util.ViewUtil
 import me.zzhhoo.newandroidbox.view.ui.theme.NewAndroidBoxTheme
 
 class MainActivity : ComponentActivity() {
     private val alertUtil = AlertUtil(this)
     private val shareUtil = ShareUtil(this)
+    private val toastUtil = ToastUtil(this)
+    private val viewUtil = ViewUtil(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -75,8 +79,8 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     floatingActionButton = {
-                        getFab() {
-                            showToast("fab.onClick")
+                        viewUtil.getFab() {
+                            toastUtil.showShortToast("fab.onClick")
                         }
                     }) {
 
@@ -97,106 +101,70 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun initContentView() {
-        getButton(id = "button_androidsdk", title = "Android SDK") {
-//                val navigate = Intent(this, LoginActivity::class.java)
-//                startActivity(navigate)
-            val sdks = arrayOf(
-                "Android 1.0 (API 1)",
-                "Android 1.1 (API 2, Petit Four 花式小蛋糕)",
-                "Android 1.5 (API 3, Cupcake 纸杯蛋糕)",
-                "Android 1.6 (API 4, Donut 甜甜圈)",
-                "Android 2.0 (API 5, Eclair 松饼)",
-                "Android 2.0.1 (API 6, Eclair 松饼)",
-                "Android 2.1 (API 7, Eclair 松饼)",
-                "Android 2.2.x (API 8, Froyo 冻酸奶)",
-                "Android 2.3-2.3.2 (API 9, Gingerbread 姜饼)",
-                "Android 2.3.3-2.3.7 (API 10, Gingerbread 姜饼)",
-                "Android 3.0 (API 11, Honeycomb 蜂巢)",
-                "Android 3.1 (API 12, Honeycomb 蜂巢)",
-                "Android 3.2.x (API 13, Honeycomb 蜂巢)",
-                "Android 4.0-4.0.2 (API 14, Ice Cream Sandwich 冰激凌三明治)",
-                "Android 4.0.3-4.0.4 (API 15, Ice Cream Sandwich 冰激凌三明治)",
-                "Android 4.1.x (API 16, Jelly Bean  果冻豆)",
-                "Android 4.2.x (API 17, Jelly Bean  果冻豆)",
-                "Android 4.3.x (API 18, Jelly Bean  果冻豆)",
-                "Android 4.4.x (API 19, KitKat 奇巧巧克力棒)",
-                "Android 4.4w.x (API 20, KitKat 奇巧巧克力棒)",
-                "Android 5.0.x (API 21, Lollipop 棒棒糖)",
-                "Android 5.1.x (API 22, Lollipop 棒棒糖)",
-                "Android 6.0.x (API 23, Marshmallow 棉花糖)",
-                "Android 7.0 (API 24, Nougat 牛轧糖)",
-                "Android 7.1.x (API 25, Nougat 牛轧糖)",
-                "Android 8.0 (API 26, Oreo 奥利奥)",
-                "Android 8.1 (API 27, Oreo 奥利奥)",
-                "Android 9（API 28, Pie 派)",
-                "Android 10（API 29, Quince Tart(Q))",
-                "Android 11（API 30, Red Velvet Cake(R))",
-                "Android 12（API 31, Snow Cone)",
-                "Android 12L（API 32, Snow Cone，大屏幕)",
-                "Android 13（API 33, Tiramisu)",
-                "Android 14（API 34, 待更新)"
-            )
-            val nowSdk = Build.VERSION.SDK_INT
-            val alertTitle = "你是" + if (nowSdk <= sdks.size) sdks[nowSdk - 1] else "UNKNOWN"
-            alertUtil.showListAlert(alertTitle, sdks) { _, index ->
-                val title = sdks[index]
-                alertUtil.showListAlert(title, arrayOf("复制", "分享")) { _, idx ->
-                    when (idx) {
-                        0 -> ClipboardUtil.copy(title)
-                        1 -> shareUtil.shareText(title)
-                    }
-                }
+        val listItem = listOf(
+            "Android SDK",
+            getString(R.string.title_activity_app),
+            getString(R.string.title_activity_qrcode),
+            getString(R.string.title_activity_favorites),
+            getString(R.string.title_activity_calculatetool)
+        )
+        viewUtil.getListView(listItem) { idx, text ->
+            when (idx) {
+                0 -> showAndroidSDK()
+                1 -> startActivity(Intent(this, AppActivity::class.java))
+                2 -> startActivity(Intent(this, QrcodeActivity::class.java))
+                3 -> startActivity(Intent(this, FavoritesActivity::class.java))
+                4 -> startActivity(Intent(this, CalculatetoolActivity::class.java))
             }
         }
-        getButton(id = "button_app", title = getString(R.string.title_activity_app)) {
-            val navigate = Intent(this, AppActivity::class.java)
-            startActivity(navigate)
-        }
-        getButton(id = "button_qrcode", title = getString(R.string.title_activity_qrcode)) {
-            val navigate = Intent(this, QrcodeActivity::class.java)
-            startActivity(navigate)
-        }
-        getButton(id = "button_favorites", title = getString(R.string.title_activity_favorites)) {
-            val navigate = Intent(this, FavoritesActivity::class.java)
-            startActivity(navigate)
-        }
-        getButton(
-            id = "button_calculatetool",
-            title = getString(R.string.title_activity_calculatetool)
-        ) {
-            val navigate = Intent(this, CalculatetoolActivity::class.java)
-            startActivity(navigate)
-        }
-
     }
 
-    private fun showToast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
-
-    @Composable
-    private fun getFab(icon: ImageVector? = Icons.Filled.Add, onClick: () -> Unit) {
-        FloatingActionButton(
-            onClick = { onClick.invoke() },
-        ) {
-            Icon(icon ?: Icons.Filled.Add, "Floating action button.")
-        }
-    }
-
-    @Composable
-    private fun getButton(id: String, title: String, onClick: () -> Unit) {
-        Button(modifier = Modifier.layoutId(id),
-            onClick = { onClick.invoke() }
-        ) {
-            Text(title)
-        }
-    }
-
-    @Composable
-    private fun getListView(list: List<String>) {
-        LazyColumn {
-            items(list) { item ->
-                Text(text = item)
+    private fun showAndroidSDK() {
+        val sdks = arrayOf(
+            "Android 1.0 (API 1)",
+            "Android 1.1 (API 2, Petit Four 花式小蛋糕)",
+            "Android 1.5 (API 3, Cupcake 纸杯蛋糕)",
+            "Android 1.6 (API 4, Donut 甜甜圈)",
+            "Android 2.0 (API 5, Eclair 松饼)",
+            "Android 2.0.1 (API 6, Eclair 松饼)",
+            "Android 2.1 (API 7, Eclair 松饼)",
+            "Android 2.2.x (API 8, Froyo 冻酸奶)",
+            "Android 2.3-2.3.2 (API 9, Gingerbread 姜饼)",
+            "Android 2.3.3-2.3.7 (API 10, Gingerbread 姜饼)",
+            "Android 3.0 (API 11, Honeycomb 蜂巢)",
+            "Android 3.1 (API 12, Honeycomb 蜂巢)",
+            "Android 3.2.x (API 13, Honeycomb 蜂巢)",
+            "Android 4.0-4.0.2 (API 14, Ice Cream Sandwich 冰激凌三明治)",
+            "Android 4.0.3-4.0.4 (API 15, Ice Cream Sandwich 冰激凌三明治)",
+            "Android 4.1.x (API 16, Jelly Bean  果冻豆)",
+            "Android 4.2.x (API 17, Jelly Bean  果冻豆)",
+            "Android 4.3.x (API 18, Jelly Bean  果冻豆)",
+            "Android 4.4.x (API 19, KitKat 奇巧巧克力棒)",
+            "Android 4.4w.x (API 20, KitKat 奇巧巧克力棒)",
+            "Android 5.0.x (API 21, Lollipop 棒棒糖)",
+            "Android 5.1.x (API 22, Lollipop 棒棒糖)",
+            "Android 6.0.x (API 23, Marshmallow 棉花糖)",
+            "Android 7.0 (API 24, Nougat 牛轧糖)",
+            "Android 7.1.x (API 25, Nougat 牛轧糖)",
+            "Android 8.0 (API 26, Oreo 奥利奥)",
+            "Android 8.1 (API 27, Oreo 奥利奥)",
+            "Android 9（API 28, Pie 派)",
+            "Android 10（API 29, Quince Tart(Q))",
+            "Android 11（API 30, Red Velvet Cake(R))",
+            "Android 12（API 31, Snow Cone)",
+            "Android 12L（API 32, Snow Cone，大屏幕)",
+            "Android 13（API 33, Tiramisu)",
+            "Android 14（API 34, 待更新)"
+        )
+        val nowSdk = Build.VERSION.SDK_INT
+        val alertTitle = "你是" + if (nowSdk <= sdks.size) sdks[nowSdk - 1] else "UNKNOWN"
+        alertUtil.showListAlert(alertTitle, sdks) { _, index ->
+            val title = sdks[index]
+            alertUtil.showListAlert(title, arrayOf("复制", "分享")) { _, idx ->
+                when (idx) {
+                    0 -> ClipboardUtil.copy(title)
+                    1 -> shareUtil.shareText(title)
+                }
             }
         }
     }
