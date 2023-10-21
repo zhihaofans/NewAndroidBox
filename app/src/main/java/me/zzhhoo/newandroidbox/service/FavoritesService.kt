@@ -43,17 +43,22 @@ class FavoritesService {
         return sp.putString("favorites", dataStr)
     }
 
-    fun addItem(text: String): Boolean {
+    fun addItem(text: String, type: String = "text"): Boolean {
         val oldData = getFavoritesList()
         oldData.data.add(
             FavoritesItemGson(
                 text = text,
-                type = "text",
+                type = if (type.isNotNullAndEmpty()) {
+                    type
+                } else {
+                    "text"
+                },
                 timeStamp = DatetimeUtil.unixTimeStampMill().toInt()
             )
         )
         return setFavoritesList(oldData.data)
     }
+
 
     fun deleteIndex(idx: Int): Boolean {
         val oldData = getFavoritesList()
